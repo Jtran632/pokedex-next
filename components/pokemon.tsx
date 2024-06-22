@@ -1,5 +1,7 @@
 "use client";
 import { PokemonContext } from "@/app/PokemonContext";
+import { Radar } from "react-chartjs-2";
+import { RadarChart } from "./pokemonRadar";
 import { useState, useEffect, useContext } from "react";
 export default function Pokemon() {
   const [curPage, setCurPage] = useState(0);
@@ -7,20 +9,21 @@ export default function Pokemon() {
   const [pokemonNames, setPokemonNames] = useState<{ [key: string]: string }>(
     {}
   );
-  const [extraData, setExtraData] = useState<any>({})
+  const [extraData, setExtraData] = useState<any>({});
   const PokemonContextData = useContext(PokemonContext);
   const { curGen, setCurGen, curPokemon, setCurPokemon } = PokemonContextData;
   useEffect(() => {
     async function fetchSpecies() {
-      let res = await fetch(curPokemon.species.url)
-      return res.json()
+      let res = await fetch(curPokemon.species.url);
+      return res.json();
     }
     async function doStuff() {
-      let s = await fetchSpecies()
-      setExtraData(s)
+      let res = await fetchSpecies();
+      return res;
     }
-    doStuff()
-    console.log(extraData)
+    if (Object.keys(curPokemon).length > 0) {
+      setExtraData(doStuff());
+    }
   }, [curPokemon]);
 
   useEffect(() => {
@@ -40,7 +43,6 @@ export default function Pokemon() {
           names[num] = data.pokemon_species[i].name;
         }
         pokelist = pokelist.sort((a, b) => a - b);
-        console.log(names[1]);
         setPokemonNames(names);
         return pokelist;
       }
@@ -66,7 +68,7 @@ export default function Pokemon() {
     }
     fetchAll();
   }, [curGen]);
-  
+
   function CreatePages() {
     return (
       <div className="flex justify-center pt-0 gap-4">
@@ -156,10 +158,14 @@ export default function Pokemon() {
   function Pokedex() {
     return (
       <div>
-        {curPokemon ? (
+        {Object.keys(curPokemon).length > 0 ? (
           <>
-            <div className=" p-4 border 2 flex justify-center">
-              <div className="text-white">{curPokemon.name}</div>
+            <div className="bg-white text-black h-96 w-96">
+              <RadarChart data={curPokemon.stats} />
+            </div>
+
+            <div className=" p-4 border 2 flex justify-center h-full bg-red-700 text-black">
+              <div className="">{curPokemon.name}</div>
               <img
                 src={curPokemon?.sprites?.other?.showdown?.front_default}
                 className="h-24 mx-auto"
@@ -174,10 +180,11 @@ export default function Pokemon() {
     );
   }
   function MapPokemon() {
-    console.log(curPokemon);
     return (
       <div className="grid grid-cols-2 divide-x">
-        <Pokedex />
+        <div>
+          <Pokedex />
+        </div>
         <PokemonGrid />
       </div>
     );
