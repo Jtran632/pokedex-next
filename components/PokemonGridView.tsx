@@ -1,31 +1,14 @@
 "use client";
 import { PokemonContext } from "@/app/PokemonContext";
-import { Radar } from "react-chartjs-2";
-import { RadarChart } from "./pokemonRadar";
 import { useState, useEffect, useContext } from "react";
-export default function Pokemon() {
+export default function PokemonGridView() {
   const [curPage, setCurPage] = useState(0);
   const [pokeData, setPokeData] = useState<any>([]);
   const [pokemonNames, setPokemonNames] = useState<{ [key: string]: string }>(
     {}
   );
-  const [extraData, setExtraData] = useState<any>({});
   const PokemonContextData = useContext(PokemonContext);
   const { curGen, setCurGen, curPokemon, setCurPokemon } = PokemonContextData;
-  useEffect(() => {
-    async function fetchSpecies() {
-      let res = await fetch(curPokemon.species.url);
-      return res.json();
-    }
-    async function doStuff() {
-      let res = await fetchSpecies();
-      return res;
-    }
-    if (Object.keys(curPokemon).length > 0) {
-      setExtraData(doStuff());
-    }
-  }, [curPokemon]);
-
   useEffect(() => {
     async function fetchAll() {
       async function getPokemonUrls() {
@@ -71,11 +54,11 @@ export default function Pokemon() {
 
   function CreatePages() {
     return (
-      <div className="flex justify-center pt-0 gap-4">
+      <div className="flex justify-center pt-8 gap-2 text-xs">
         {Array.from({ length: pokeData.length }, (_, i) => (
           <button
             key={i}
-            className={`h-8 w-8 border-2 rounded-md ${
+            className={`h-6 w-6 border-2 rounded-md ${
               curPage === i ? "bg-white text-black" : "bg-black text-white"
             }`}
             onClick={() => setCurPage(i)}
@@ -100,14 +83,16 @@ export default function Pokemon() {
     ];
     const [toggle, setToggle] = useState(false);
     return (
-      <div className=" w-40 h-12 absolute right-10">
+      <div className=" w-20 h-12 absolute right-10 pt-8">
         <div
-          className="hover:text-blue-400 text-base text-center border rounded-md p-2 w-full hover:cursor-pointer"
+          className="hover:text-blue-400 text-base text-center border rounded-md p-0 w-full hover:cursor-pointer"
           onClick={() => setToggle(!toggle)}
         >
           <div>{regions[curGen - 1]}</div>
         </div>
-        <div className={`absolute w-full ${toggle ? "visible" : "hidden"}`}>
+        <div
+          className={`absolute w-full ${toggle ? "visible" : "hidden"} z-50`}
+        >
           {Array.from({ length: 9 }, (_, i) => (
             <div
               key={`gen-${i}`}
@@ -116,7 +101,7 @@ export default function Pokemon() {
                 setCurGen(i + 1),
                 setCurPage(0),
               ]}
-              className="z-50 border border-black  bg-gray-700 text-white hover:bg-gray-400 font-mono p-1"
+              className="z-50 border border-black  bg-gray-700 text-white hover:bg-gray-400 font-mono text-xs p-1"
             >
               {`${i + 1} - ${regions[i]}`}
             </div>
@@ -127,67 +112,34 @@ export default function Pokemon() {
   }
   function PokemonGrid() {
     return (
-      <div className="h-full">
-        <div className="h-screen p-4">
-          <GenSelect />
-          <CreatePages />
-          <div className="grid xl:grid-cols-6 md:grid-cols-4 sm:grid-cols-4 pt-6">
-            {pokeData.length > 0 && Array.isArray(pokeData[curPage]) ? (
-              pokeData[curPage].map((pokemon: any, i: number) => (
-                <div className="capitalize border" key={i}>
-                  <div className="flex text-xs justify-around p-1">
-                    <div>{pokemon.id}</div>
-                    <div>{pokemonNames[pokemon.id]}</div>
-                    <div></div>
-                  </div>
-                  <img
-                    src={pokemon.sprites.front_default}
-                    className="mx-auto p-2 hover:scale-125 hover:animate-pulse"
-                    onClick={() => setCurPokemon(pokemon)}
-                  ></img>
+      <div className="flex flex-col gap-10">
+        <GenSelect />
+        <CreatePages />
+        <div className="grid grid-cols-6 resize-none p-2">
+          {pokeData.length > 0 && Array.isArray(pokeData[curPage]) ? (
+            pokeData[curPage].map((pokemon: any, i: number) => (
+              <div className="capitalize border w-full  text-xs" key={i}>
+                <div className="flex justify-between px-1">
+                  <div>#{pokemon.id}</div>
+                  <div>{pokemonNames[pokemon.id]}</div>
                 </div>
-              ))
-            ) : (
-              <></>
-            )}
-          </div>
+                <img
+                  src={pokemon.sprites.other['official-artwork'].front_default}
+                  className="h-24 mx-auto scale-90 hover:scale-105 hover:animate-pulse "
+                  onClick={() => setCurPokemon(pokemon)}
+                ></img>
+              </div>
+            ))
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     );
   }
-  function Pokedex() {
-    return (
-      <div>
-        {Object.keys(curPokemon).length > 0 ? (
-          <>
-            <div className="bg-white text-black h-96 w-96">
-              <RadarChart data={curPokemon.stats} />
-            </div>
 
-            <div className=" p-4 border 2 flex justify-center h-full bg-red-700 text-black">
-              <div className="">{curPokemon.name}</div>
-              <img
-                src={curPokemon?.sprites?.other?.showdown?.front_default}
-                className="h-24 mx-auto"
-              ></img>
-              <div></div>
-            </div>
-          </>
-        ) : (
-          <></>
-        )}
-      </div>
-    );
-  }
   function MapPokemon() {
-    return (
-      <div className="grid grid-cols-2 divide-x">
-        <div>
-          <Pokedex />
-        </div>
-        <PokemonGrid />
-      </div>
-    );
+    return <PokemonGrid />;
   }
   return <MapPokemon />;
 }

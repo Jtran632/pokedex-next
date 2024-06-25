@@ -31,3 +31,8 @@ body {
     text-wrap: balance;
   }
 }
+
+.bg_pokemon {
+  background-image: url('../public/bg..png');
+  background-size:cover
+}
