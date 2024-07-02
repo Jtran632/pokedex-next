@@ -1,5 +1,14 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  AwaitedReactNode,
+  JSXElementConstructor,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+} from "react";
 import ReactAudioPlayer from "react-audio-player";
 import { RadarChart } from "./pokemonRadar";
 import { PokemonContext } from "@/app/PokemonContext";
@@ -112,7 +121,7 @@ export default function PokemonInfoView() {
     );
   }
   function PokemonAbilities() {
-    let enDesc: any[] = [];
+    let enDesc: string[] = [];
     function getEnglishDesc() {
       Array.from({ length: abilityDesc.length }, (_, i) => {
         if (Object.keys(abilityDesc[i].effect_entries).length > 0) {
@@ -223,7 +232,7 @@ export default function PokemonInfoView() {
           />
         </button>
 
-        {curPokemon.sprites.front_shiny ? (
+        {curPokemon.sprites.front_shiny && (
           <button
             onClick={() => [setShiny(!shiny), setPlayCry(false)]}
             className={s}
@@ -232,10 +241,8 @@ export default function PokemonInfoView() {
               className={`w-fit ${!shiny ? " fill-black" : "fill-yellow-500"}`}
             />
           </button>
-        ) : (
-          <></>
         )}
-        {curPokemon.sprites.back_default ? (
+        {curPokemon.sprites.back_default && (
           <button
             onClick={() => [setFlipPokemon(!flipPokemon), setPlayCry(false)]}
             className={s}
@@ -246,10 +253,8 @@ export default function PokemonInfoView() {
               <BiLeftArrow className="w-fit fill-black" />
             )}
           </button>
-        ) : (
-          <></>
         )}
-        {curPokemon.sprites.front_female ? (
+        {curPokemon.sprites.front_female && (
           <button
             onClick={() => [setIsFemale(!isFemale), setPlayCry(false)]}
             className={s}
@@ -260,8 +265,6 @@ export default function PokemonInfoView() {
               <IoFemale className={"w-fit  fill-red-500"} />
             )}
           </button>
-        ) : (
-          <div></div>
         )}
       </div>
     );
@@ -312,10 +315,19 @@ export default function PokemonInfoView() {
     );
   }
   function PokemonGeneralInfo() {
+    let enGenus = [];
+    if (extraData && extraData.genera && extraData.genera.length > 0) {
+      enGenus = extraData.genera
+        .filter((i: { language: { name: string } }) => i.language.name === "en")
+        .map((i: { genus: string }) => i.genus);
+    }
     return (
-      <div>
+      <div className="capitalize">
         <div className="p-2 text-xs">
-          <div>NationalDex: #{extraData.id}</div>
+          <div>
+            {curPokemon.name} - {enGenus}
+          </div>
+          <div>National Dex: #{extraData.id} </div>
           <div>
             Height: {curPokemon.height / 10}M (
             {((curPokemon.height / 10) * 3.28084).toFixed(2)}FT)
@@ -333,10 +345,48 @@ export default function PokemonInfoView() {
       </div>
     );
   }
+  function PokemonFlavorText() {
+    const [curEntry, setCurEntry] = useState(0);
+    let entries: any = {};
+    let k: string[] = [];
+    if (extraData && extraData.flavor_text_entries) {
+      extraData.flavor_text_entries
+        .filter((i: { language: { name: string } }) => i.language.name === "en")
+        .map(
+          (i: { version: { name: string }; flavor_text: string }) =>
+            (entries[i.version.name] = i.flavor_text.replace("\f", " "))
+        );
+      k = Object.keys(entries);
+    }
+    return (
+      <div>
+        <div className="text-md underline underline-offset-4">Game</div>
+        <div className="grid grid-cols-4 overflow-y-auto h-24 text-xs scrollbar-thin">
+          {k.map((i) => (
+            <button
+              key={i}
+              onClick={() => setCurEntry(k.indexOf(i))}
+              className={`hover:underline underline-offset-4 capitalize p-4 ${
+                curEntry === k.indexOf(i) ? "text-blue-400" : ""
+              }`}
+            >
+              {i}
+            </button>
+          ))}
+        </div>
+        <div className="gap- flex flex-col">
+          <div className="text-md underline underline-offset-4">
+            Flavor Text
+          </div>
+          <div className="p-4 border-2 h-44">{entries[k[curEntry]]}</div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col resize-none">
       <div className="grid grid-cols-12">
-        {Object.keys(curPokemon).length > 0 ? (
+        {Object.keys(curPokemon).length > 0 && (
           <div className="col-span-11">
             <div className="flex flex-col h-full p-1">
               <div className="grid capitalize">
@@ -347,7 +397,7 @@ export default function PokemonInfoView() {
                   <PokemonGeneralInfo />
                 </div>
                 <div className="flex flex-col w-full p-2">
-                  {/* add in moves and game appearnces here */}
+                  <PokemonFlavorText />
                 </div>
                 <div className="border-2 p-2 w-full h-full">
                   <PokemonVarieties />
@@ -359,15 +409,16 @@ export default function PokemonInfoView() {
               </div>
             </div>
           </div>
-        ) : (
-          <></>
         )}
-        {Object.keys(curPokemon).length > 0 ? (
-          <div className="col-span-1 border-4 border-red-400">
+        {Object.keys(curPokemon).length > 0 && (
+          <div className="flex col-span-1 border justify-center">
             {/* add in tabs for evolution chain */}
+            <div className="grid grid-cols-1 grid-rows-3 justify-center items-center">
+              <div>W</div>
+              <div>I</div>
+              <div>P</div>
+            </div>
           </div>
-        ) : (
-          <></>
         )}
       </div>
     </div>
