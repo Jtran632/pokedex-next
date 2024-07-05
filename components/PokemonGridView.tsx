@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 import { PokemonContext } from "@/app/PokemonContext";
 import { useState, useEffect, useContext } from "react";
 export default function PokemonGridView() {

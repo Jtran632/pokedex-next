@@ -118,7 +118,7 @@ export default function PokemonChainView({ extraData }: any) {
         className={`grid grid-cols-${chainToRender.length} gap-10 w-full h-full`}
       >
         {chainToRender.map((i: any, idx: number) => (
-          <div className="grid grid-flow-row col-span-1 gap-3 overflow-y-auto scrollbar-thin w-contain">
+          <div className="grid grid-flow-row col-span-1 gap-3 overflow-y-auto scrollbar-thin w-contain" key={idx}>
             {i.map((pokemon: any) => (
               <div
                 key={pokemon.name}

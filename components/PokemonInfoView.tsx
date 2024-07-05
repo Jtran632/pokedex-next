@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect, useContext } from "react";
 import ReactAudioPlayer from "react-audio-player";
 import { RadarChart } from "./pokemonRadar";
