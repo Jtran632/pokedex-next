@@ -1,14 +1,5 @@
 "use client";
-import {
-  useState,
-  useEffect,
-  useContext,
-  AwaitedReactNode,
-  JSXElementConstructor,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-} from "react";
+import { useState, useEffect, useContext } from "react";
 import ReactAudioPlayer from "react-audio-player";
 import { RadarChart } from "./pokemonRadar";
 import { PokemonContext } from "@/app/PokemonContext";
@@ -16,6 +7,7 @@ import { IoFemale, IoMale, IoPlay } from "react-icons/io5";
 import { HiMiniSparkles } from "react-icons/hi2";
 import { BiRightArrow, BiLeftArrow } from "react-icons/bi";
 import { GiSpeaker } from "react-icons/gi";
+import PokemonChainView from "./PokemonChainView";
 export default function PokemonInfoView() {
   const PokemonContextData = useContext(PokemonContext);
   const { curGen, setCurGen, curPokemon, setCurPokemon } = PokemonContextData;
@@ -28,6 +20,7 @@ export default function PokemonInfoView() {
   const [altForms, setAltForms] = useState<any[][]>([]);
   const [altUrl, setAltUrl] = useState("");
   const [expData, setExpData] = useState<any>({});
+  const [view, setView] = useState<number>(1);
   useEffect(() => {
     async function fetchSpeciesUrl() {
       let res = await fetch(curPokemon.species.url);
@@ -65,9 +58,6 @@ export default function PokemonInfoView() {
     console.log("current pokemon", curPokemon);
   }, [curPokemon]);
 
-  // useEffect(() => {
-  //   console.log(abilityDesc);
-  // }, [abilityDesc]);
   useEffect(() => {
     console.log("species data", extraData);
     let res: any[] = [];
@@ -271,45 +261,50 @@ export default function PokemonInfoView() {
   }
   function PokemonView() {
     return (
-      <div className="grid grid-cols-12 bg_pokemon border-8 border-double p-12">
-        <div className=" col-start-2 col-end-12">
-          <div className="flex justify-center items-center text-black h-full">
-            <div className="flex flex-col justify-center items-center">
-              <div className="text-xl">{curPokemon.name}</div>
-              <div className="flex gap-1">
-                {Array.from({ length: curPokemon.types.length }, (_, i) => (
-                  <img
-                    key={i}
-                    src={`https://veekun.com/dex/media/types/en/${curPokemon.types[i].type.name}.png`}
-                    className=""
-                  />
-                ))}
-              </div>
-              <img
-                src={
-                  !shiny
-                    ? !isFemale
+      <div className="grid capitalize">
+        <div className="grid grid-cols-12 bg_pokemon border-b-4 p-12">
+          <div className=" col-start-2 col-end-12">
+            <div className="flex justify-center items-center text-black h-full">
+              <div className="flex flex-col justify-center items-center">
+                <div className="text-xl">{curPokemon.name}</div>
+                <div className="flex gap-1">
+                  {Array.from({ length: curPokemon.types.length }, (_, i) => (
+                    <img
+                      key={i}
+                      src={`https://veekun.com/dex/media/types/en/${curPokemon.types[i].type.name}.png`}
+                      className=""
+                    />
+                  ))}
+                </div>
+                <img
+                  src={
+                    !shiny
+                      ? !isFemale
+                        ? !flipPokemon
+                          ? curPokemon?.sprites?.front_default != null
+                            ? curPokemon?.sprites?.front_default
+                            : curPokemon?.sprites?.other["official-artwork"]
+                                ?.front_default
+                          : curPokemon?.sprites?.back_default
+                        : !flipPokemon
+                        ? curPokemon?.sprites?.front_female
+                        : curPokemon?.sprites?.back_female
+                      : !isFemale
                       ? !flipPokemon
-                        ? curPokemon?.sprites?.front_default
-                        : curPokemon?.sprites?.back_default
+                        ? curPokemon?.sprites?.front_shiny
+                        : curPokemon?.sprites?.back_shiny
                       : !flipPokemon
-                      ? curPokemon?.sprites?.front_female
-                      : curPokemon?.sprites?.back_female
-                    : !isFemale
-                    ? !flipPokemon
-                      ? curPokemon?.sprites?.front_shiny
-                      : curPokemon?.sprites?.back_shiny
-                    : !flipPokemon
-                    ? curPokemon?.sprites?.front_shiny_female
-                    : curPokemon?.sprites?.back_shiny_female
-                }
-                className="h-32"
-              ></img>
+                      ? curPokemon?.sprites?.front_shiny_female
+                      : curPokemon?.sprites?.back_shiny_female
+                  }
+                  className="h-32"
+                ></img>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-start-12 flex items-center">
-          <PokemonButtons />
+          <div className="col-start-12 flex items-center">
+            <PokemonButtons />
+          </div>
         </div>
       </div>
     );
@@ -375,49 +370,71 @@ export default function PokemonInfoView() {
           ))}
         </div>
         <div className="gap- flex flex-col">
-          <div className="text-md underline underline-offset-4">
-            Flavor Text
+          <div className="flex gap-2 text-md capitalize">
+            <div className="underline underline-offset-4">Flavor Text</div>
+            {" - "}
+            <div>
+              {"Pokemon "}
+              {k[curEntry]}
+            </div>
           </div>
           <div className="p-4 border-2 h-44">{entries[k[curEntry]]}</div>
         </div>
       </div>
     );
   }
+  function PokemonInfo() {
+    return (
+      <div className="grid grid-cols-2 grid-rows-2 h-fit">
+        <div className="border-2 p-2 w-full h-full">
+          <PokemonGeneralInfo />
+        </div>
+        <div className="flex flex-col w-full p-2">
+          <PokemonFlavorText />
+        </div>
+        <div className="border-2 p-2 w-full h-full">
+          <PokemonVarieties />
+        </div>
+        <div className=" p-2 mx-auto w-full flex justify-center bg-white">
+          {/* add a toggle and a bar representation */}
+          <RadarChart data={curPokemon.stats} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col resize-none">
       <div className="grid grid-cols-12">
         {Object.keys(curPokemon).length > 0 && (
           <div className="col-span-11">
-            <div className="flex flex-col h-full p-1">
-              <div className="grid capitalize">
-                <PokemonView />
-              </div>
-              <div className="grid grid-cols-2 grid-rows-2">
-                <div className="border-2 p-2 w-full h-full">
-                  <PokemonGeneralInfo />
-                </div>
-                <div className="flex flex-col w-full p-2">
-                  <PokemonFlavorText />
-                </div>
-                <div className="border-2 p-2 w-full h-full">
-                  <PokemonVarieties />
-                </div>
-                <div className=" p-2 mx-auto w-full flex justify-center bg-white">
-                  {/* add a toggle and a bar representation */}
-                  <RadarChart data={curPokemon.stats} />
-                </div>
-              </div>
+            <div className="flex flex-col h-screen p-1">
+              <PokemonView />
+              {view === 1 && <PokemonInfo />}
+              {view === 2 && <PokemonChainView extraData={extraData} />}
             </div>
           </div>
         )}
         {Object.keys(curPokemon).length > 0 && (
-          <div className="flex col-span-1 border justify-center">
-            {/* add in tabs for evolution chain */}
-            <div className="grid grid-cols-1 grid-rows-3 justify-center items-center">
-              <div>W</div>
-              <div>I</div>
-              <div>P</div>
-            </div>
+          <div className="flex flex-col col-span-1 border-l border-r h-full pt-20 gap-4">
+            <button
+              value={1}
+              className="border-2 p-2 mx-2"
+              onClick={(e) => {
+                setView(Number(e.currentTarget.value));
+              }}
+            >
+              Info
+            </button>
+            <button
+              value={2}
+              className="border-2 p-2 mx-2"
+              onClick={(e) => {
+                setView(Number(e.currentTarget.value));
+              }}
+            >
+              Evo
+            </button>
           </div>
         )}
       </div>
