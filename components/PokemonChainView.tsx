@@ -129,12 +129,11 @@ export default function PokemonChainView({ extraData }: any) {
     getChainToRender();
   }, [chainData]);
   console.log(chainToRender);
+  let s = `grid grid-cols-${chainToRender.length} gap-10 w-full h-full`;
   return (
     <div className="capitalize h-contain w-contain p-10 overflow-hidden">
       <div className="text-md underline underline-offset-4">Evolution Line</div>
-      <div
-        className={`grid grid-cols-${chainToRender.length} gap-10 w-full h-full`}
-      >
+      <div className={s}>
         {chainToRender.map((i: any, idx: number) => (
           <div
             className="flex flex-col col-span-1 gap-4 w-contain overflow-scroll scrollbar-none"
