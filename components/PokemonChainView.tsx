@@ -112,22 +112,25 @@ export default function PokemonChainView({ extraData }: any) {
   }, [chainData]);
   console.log(chainToRender);
   return (
-    <div className="capitalize h-contain w-contain p-10 overflow-y-auto scrollbar-none">
+    <div className="capitalize h-contain w-contain p-10 overflow-hidden">
       <div className="text-md underline underline-offset-4">Evolution Line</div>
       <div
         className={`grid grid-cols-${chainToRender.length} gap-10 w-full h-full`}
       >
         {chainToRender.map((i: any, idx: number) => (
-          <div className="grid grid-flow-row col-span-1 gap-3 overflow-y-auto scrollbar-thin w-contain" key={idx}>
+          <div
+            className="flex flex-col col-span-1 gap-2 w-contain overflow-scroll scrollbar-none"
+            key={idx}
+          >
+            <div>{i[0].type}</div>
             {i.map((pokemon: any) => (
               <div
                 key={pokemon.name}
-                className="border border-yellow-100 p-3 h-32"
+                className={`border border-yellow-100 p-3 h-fit ${
+                  chainToRender.length === 1 ? "w-1/3" : ""
+                }`}
               >
-                <div className="">
-                  {pokemon.name} {" - "}
-                  {pokemon.type}
-                </div>
+                <div className="">{pokemon.name}</div>
                 {pokemon.trigger && (
                   <div className="text-xs">
                     <div>{pokemon.from && `evolves from ${pokemon.from}`}</div>
