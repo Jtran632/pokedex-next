@@ -23,12 +23,26 @@ export default function PokemonChainView({ extraData }: any) {
       //get base and baby
       if (chainData.chain) {
         if (chainData.chain.is_baby) {
-          res.push({ type: "baby", name: chainData.chain.species.name });
+          res.push({
+            type: "baby",
+            name: chainData.chain.species.name,
+            id: chainData.chain.species.url
+              .split("pokemon-species/")
+              .pop()
+              .replace("/", ""),
+          });
         } else {
-          res.push({ type: "base", name: chainData.chain.species.name });
+          res.push({
+            type: "base",
+            name: chainData.chain.species.name,
+            id: chainData.chain.species.url
+              .split("pokemon-species/")
+              .pop()
+              .replace("/", ""),
+          });
         }
       }
-
+      console.log("initial chain data", chainData);
       //get evolution conditions
       function getTrigger(evolution_details: any[]) {
         let res: any[] = [];
@@ -71,6 +85,10 @@ export default function PokemonChainView({ extraData }: any) {
             name: evolution.species.name,
             from: parentName,
             trigger: getTrigger(evolution.evolution_details),
+            id: evolution.species.url
+              .split("pokemon-species/")
+              .pop()
+              .replace("/", ""),
           });
           if (evolution.evolves_to.length > 0) {
             getEvolutions(evolution.evolves_to, evolution.species.name);
@@ -119,35 +137,46 @@ export default function PokemonChainView({ extraData }: any) {
       >
         {chainToRender.map((i: any, idx: number) => (
           <div
-            className="flex flex-col col-span-1 gap-2 w-contain overflow-scroll scrollbar-none"
+            className="flex flex-col col-span-1 gap-4 w-contain overflow-scroll scrollbar-none"
             key={idx}
           >
             <div>{i[0].type}</div>
-            {i.map((pokemon: any) => (
-              <div
-                key={pokemon.name}
-                className={`border border-yellow-100 p-3 h-fit ${
-                  chainToRender.length === 1 ? "w-1/3" : ""
-                }`}
-              >
-                <div className="">{pokemon.name}</div>
-                {pokemon.trigger && (
-                  <div className="text-xs">
-                    <div>{pokemon.from && `evolves from ${pokemon.from}`}</div>
-                    {pokemon.trigger.map((j: any, idx: number) => (
-                      <div key={idx}>
-                        {idx === 0 && "Condition: "}
-                        {j
-                          .join(" | ")
-                          .replace("-", " ")
-                          .replace("-", " ")
-                          .replace("_", " ")}
+            <div className="flex flex-col col-span-1 gap-2 w-contain overflow-scroll scrollbar-none">
+              {i.map((pokemon: any) => (
+                <div
+                  key={pokemon.name}
+                  className={`border border-yellow-100 p-3 h-fit ${
+                    chainToRender.length === 1 ? "w-1/3" : ""
+                  }`}
+                >
+                  <div className="flex justify-between">
+                    <div className="grid">
+                      <div className="flex items-center gap-1">
+                        <div className="">{pokemon.name}</div>
+                        <div className="text-xs">#{pokemon.id}</div>
                       </div>
-                    ))}
+                      {pokemon.trigger && (
+                        <div className="text-xs">
+                          {/* <div>
+                        {pokemon.from && `evolves from ${pokemon.from}`}
+                        </div> */}
+                          {pokemon.trigger.map((j: any, idx: number) => (
+                            <div key={idx} className="border-b p-1">
+                              {idx === 0 && "Condition: "}
+                              {j.join(" | ")}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <img
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+                      className="h-14"
+                    ></img>
                   </div>
-                )}
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
