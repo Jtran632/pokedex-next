@@ -128,19 +128,23 @@ export default function PokemonChainView({ extraData }: any) {
 
     getChainToRender();
   }, [chainData]);
-  console.log(chainToRender);
-  let s = `grid grid-cols-${chainToRender.length} gap-10 w-full h-full`;
+  console.log("chain", chainToRender);
   return (
     <div className="capitalize h-contain w-contain p-10 overflow-hidden">
       <div className="text-md underline underline-offset-4">Evolution Line</div>
-      <div className={s}>
+      <div className={`grid  grid-flow-col gap-10 w-full h-full`}>
         {chainToRender.map((i: any, idx: number) => (
           <div
             className="flex flex-col col-span-1 gap-4 w-contain overflow-scroll scrollbar-none"
             key={idx}
           >
-            <div>{i[0].type}</div>
-            <div className="flex flex-col col-span-1 gap-2 w-contain overflow-scroll scrollbar-none">
+            {chainToRender[0][0].type === "baby" &&
+            i[0].type === "evolution" ? (
+              <div className="text-xs">Base/{i[0].type}</div>
+            ) : (
+              <div className="text-xs">{i[0].type}</div>
+            )}
+            <div className="flex flex-col col-span-1 gap-2 w-full overflow-scroll scrollbar-none">
               {i.map((pokemon: any) => (
                 <div
                   key={pokemon.name}
@@ -160,9 +164,14 @@ export default function PokemonChainView({ extraData }: any) {
                         {pokemon.from && `evolves from ${pokemon.from}`}
                         </div> */}
                           {pokemon.trigger.map((j: any, idx: number) => (
-                            <div key={idx} className="border-b p-1">
-                              {idx === 0 && "Condition: "}
-                              {j.join(" | ")}
+                            <div
+                              key={idx}
+                              className="border-b p-1 flex flex-col"
+                            >
+                              {/* {idx === 0 && "Condition: "} */}
+                              {j.map((i: string) => (
+                                <div key={i}>{i}</div>
+                              ))}
                             </div>
                           ))}
                         </div>
@@ -170,7 +179,7 @@ export default function PokemonChainView({ extraData }: any) {
                     </div>
                     <img
                       src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
-                      className="h-14"
+                      className="h-24"
                     ></img>
                   </div>
                 </div>
