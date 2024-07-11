@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useContext } from "react";
+import { PokemonContext } from "@/app/PokemonContext";
 export default function PokemonChainView({ extraData }: any) {
   const [chainData, setcChainData] = useState<any>([]);
   const [chainToRender, setChainToRender] = useState<any>([]);
+  const [click, setClick] = useState(0);
+  const PokemonContextData = useContext(PokemonContext);
+  const { curGen, setCurGen, curPokemon, setCurPokemon } = PokemonContextData;
   useEffect(() => {
     async function getChain() {
       if (extraData.evolution_chain) {
@@ -128,6 +131,14 @@ export default function PokemonChainView({ extraData }: any) {
 
     getChainToRender();
   }, [chainData]);
+  useEffect(() => {
+    async function getPokemon(id: number) {
+      let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+      let json = await res.json();
+      setCurPokemon(json);
+    }
+    getPokemon(click);
+  }, [click]);
   console.log("chain", chainToRender);
   return (
     <div className="capitalize h-contain w-contain p-10 overflow-hidden">
@@ -144,15 +155,16 @@ export default function PokemonChainView({ extraData }: any) {
             ) : (
               <div className="text-xs">{i[0].type}</div>
             )}
-            <div className="flex flex-col col-span-1 gap-2 w-full overflow-scroll scrollbar-none">
+            <div className="flex flex-col col-span-1 gap-2 w-full overflow-scroll scrollbar-none ">
               {i.map((pokemon: any) => (
-                <div
+                <button
                   key={pokemon.name}
-                  className={`border border-yellow-100 p-4 h-fit ${
+                  className={`border border-white hover:border-green-400 h-fit ${
                     chainToRender.length === 1 ? "w-1/3" : ""
                   }`}
+                  onClick={() => setClick(pokemon.id)}
                 >
-                  <div className="flex justify-between">
+                  <div className="flex justify-between p-4">
                     <div className="flex flex-col">
                       <div className="flex items-center gap-1">
                         <div className="">{pokemon.name}</div>
@@ -179,10 +191,10 @@ export default function PokemonChainView({ extraData }: any) {
                     </div>
                     <img
                       src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
-                      className="h-24 p-4"
+                      className="h-20 p-4"
                     ></img>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>

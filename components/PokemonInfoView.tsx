@@ -86,6 +86,7 @@ export default function PokemonInfoView() {
 
   useEffect(() => {
     async function GetAltForm() {
+      console.log('alt url', altUrl)
       let res = await fetch(altUrl);
       return res.json();
     }
@@ -211,7 +212,7 @@ export default function PokemonInfoView() {
     );
   }
   function PokemonButtons() {
-    let s = `p-1 border-2 border-black rounded-md bg-white w-fit h-fit`;
+    let s = `p-1 border-2 border-black rounded-md bg-white w-[1.5rem] h-[1.5rem]`;
     return (
       <div className="flex flex-col text-xs gap-1 justify-end h-full pb-2">
         <button className={s} onClick={() => setPlayCry(true)}>
