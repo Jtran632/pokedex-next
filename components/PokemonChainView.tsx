@@ -148,12 +148,12 @@ export default function PokemonChainView({ extraData }: any) {
               {i.map((pokemon: any) => (
                 <div
                   key={pokemon.name}
-                  className={`border border-yellow-100 p-3 h-fit ${
+                  className={`border border-yellow-100 p-4 h-fit ${
                     chainToRender.length === 1 ? "w-1/3" : ""
                   }`}
                 >
                   <div className="flex justify-between">
-                    <div className="grid">
+                    <div className="flex flex-col">
                       <div className="flex items-center gap-1">
                         <div className="">{pokemon.name}</div>
                         <div className="text-xs">#{pokemon.id}</div>
@@ -179,7 +179,7 @@ export default function PokemonChainView({ extraData }: any) {
                     </div>
                     <img
                       src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
-                      className="h-24"
+                      className="h-24 p-4"
                     ></img>
                   </div>
                 </div>

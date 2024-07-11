@@ -22,6 +22,8 @@ export default function PokemonInfoView() {
   const [altUrl, setAltUrl] = useState("");
   const [expData, setExpData] = useState<any>({});
   const [view, setView] = useState<number>(1);
+  const [curEntry, setCurEntry] = useState(0);
+
   useEffect(() => {
     async function fetchSpeciesUrl() {
       let res = await fetch(curPokemon.species.url);
@@ -51,6 +53,7 @@ export default function PokemonInfoView() {
         setFlipPokemon(false);
         setIsFemale(false);
         setPlayCry(false);
+        setCurEntry(0);
       });
       getAbilityDesc().then((res) => {
         setAbilityDesc(res);
@@ -208,7 +211,7 @@ export default function PokemonInfoView() {
     );
   }
   function PokemonButtons() {
-    let s = `p-1 border-2 border-black rounded-md bg-white`;
+    let s = `p-1 border-2 border-black rounded-md bg-white w-fit h-fit`;
     return (
       <div className="flex flex-col text-xs gap-1 justify-end h-full pb-2">
         <button className={s} onClick={() => setPlayCry(true)}>
@@ -342,7 +345,6 @@ export default function PokemonInfoView() {
     );
   }
   function PokemonFlavorText() {
-    const [curEntry, setCurEntry] = useState(0);
     let entries: any = {};
     let k: string[] = [];
     if (extraData && extraData.flavor_text_entries) {
