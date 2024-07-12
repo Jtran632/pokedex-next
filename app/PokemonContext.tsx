@@ -15,9 +15,10 @@ export default function PokemonProvider({
 }) {
   const [curGen, setCurGen] = useState<number>(1);
   const [curPokemon, setCurPokemon] = useState<any>({});
+  const [onGrid, setOnGrid] = useState(true);
   return (
     <PokemonContext.Provider
-      value={{ curGen, setCurGen, curPokemon, setCurPokemon }}
+      value={{ curGen, setCurGen, curPokemon, setCurPokemon, onGrid, setOnGrid }}
     >
       {children}
     </PokemonContext.Provider>

@@ -86,7 +86,7 @@ export default function PokemonInfoView() {
 
   useEffect(() => {
     async function GetAltForm() {
-      console.log('alt url', altUrl)
+      console.log("alt url", altUrl);
       let res = await fetch(altUrl);
       return res.json();
     }
@@ -175,7 +175,7 @@ export default function PokemonInfoView() {
   }
   function PokemonItems() {
     return (
-      <div className="grid w-full h-full p-2">
+      <div className="grid  p-2">
         {curPokemon.held_items.length > 0 ? (
           <>
             <div>
@@ -214,7 +214,7 @@ export default function PokemonInfoView() {
   function PokemonButtons() {
     let s = `p-1 border-2 border-black rounded-md bg-white w-[1.5rem] h-[1.5rem]`;
     return (
-      <div className="flex flex-col text-xs gap-1 justify-end h-full pb-2">
+      <div className="flex flex-col text-xs gap-1 justify-end pb-2 w-fit h-fit">
         <button className={s} onClick={() => setPlayCry(true)}>
           <ReactAudioPlayer
             src={curPokemon.cries.latest}
@@ -266,48 +266,70 @@ export default function PokemonInfoView() {
   }
   function PokemonView() {
     return (
-      <div className="grid capitalize">
-        <div className="grid grid-cols-12 bg_pokemon border-b-4 p-12">
-          <div className=" col-start-2 col-end-12">
-            <div className="flex justify-center items-center text-black h-full">
-              <div className="flex flex-col justify-center items-center">
-                <div className="text-xl">{curPokemon.name}</div>
-                <div className="flex gap-1">
-                  {Array.from({ length: curPokemon.types.length }, (_, i) => (
-                    <img
-                      key={i}
-                      src={`https://veekun.com/dex/media/types/en/${curPokemon.types[i].type.name}.png`}
-                      className=""
-                    />
-                  ))}
-                </div>
-                <img
-                  src={
-                    !shiny
-                      ? !isFemale
-                        ? !flipPokemon
-                          ? curPokemon?.sprites?.front_default != null
-                            ? curPokemon?.sprites?.front_default
-                            : curPokemon?.sprites?.other["official-artwork"]
-                                ?.front_default
-                          : curPokemon?.sprites?.back_default
-                        : !flipPokemon
-                        ? curPokemon?.sprites?.front_female
-                        : curPokemon?.sprites?.back_female
-                      : !isFemale
-                      ? !flipPokemon
-                        ? curPokemon?.sprites?.front_shiny
-                        : curPokemon?.sprites?.back_shiny
-                      : !flipPokemon
-                      ? curPokemon?.sprites?.front_shiny_female
-                      : curPokemon?.sprites?.back_shiny_female
-                  }
-                  className="h-32"
-                ></img>
-              </div>
+      <div className="grid grid-cols-3 bg_pokemon w-full capitalize border-2 border-b-0">
+        {Object.keys(curPokemon).length > 0 && (
+          <div className="flex justify-start p-4">
+            <div className="flex flex-col gap-1 text-black text-xs">
+              <button
+                value={1}
+                className="border-2 border-black rounded-md bg-white px-2"
+                onClick={(e) => {
+                  setView(Number(e.currentTarget.value));
+                }}
+              >
+                Info
+              </button>
+              <button
+                value={2}
+                className="border-2 border-black rounded-md bg-white px-2"
+                onClick={(e) => {
+                  setView(Number(e.currentTarget.value));
+                }}
+              >
+                Evo
+              </button>
             </div>
           </div>
-          <div className="col-start-12 flex items-center">
+        )}
+        <div className="flex justify-center text-black">
+          <div className="flex flex-col justify-center items-center">
+            <div className="text-xl">{curPokemon.name}</div>
+            <div className="flex gap-1">
+              {Array.from({ length: curPokemon.types.length }, (_, i) => (
+                <img
+                  key={i}
+                  src={`https://veekun.com/dex/media/types/en/${curPokemon.types[i].type.name}.png`}
+                  className=""
+                />
+              ))}
+            </div>
+            <img
+              src={
+                !shiny
+                  ? !isFemale
+                    ? !flipPokemon
+                      ? curPokemon?.sprites?.front_default != null
+                        ? curPokemon?.sprites?.front_default
+                        : curPokemon?.sprites?.other["official-artwork"]
+                            ?.front_default
+                      : curPokemon?.sprites?.back_default
+                    : !flipPokemon
+                    ? curPokemon?.sprites?.front_female
+                    : curPokemon?.sprites?.back_female
+                  : !isFemale
+                  ? !flipPokemon
+                    ? curPokemon?.sprites?.front_shiny
+                    : curPokemon?.sprites?.back_shiny
+                  : !flipPokemon
+                  ? curPokemon?.sprites?.front_shiny_female
+                  : curPokemon?.sprites?.back_shiny_female
+              }
+              className="h-32"
+            ></img>
+          </div>
+        </div>
+        <div className="flex justify-end p-4">
+          <div className="flex flex-col  items-center">
             <PokemonButtons />
           </div>
         </div>
@@ -358,87 +380,71 @@ export default function PokemonInfoView() {
       k = Object.keys(entries);
     }
     return (
-      <div>
-        <div className="text-md underline underline-offset-4">Game</div>
-        <div className="grid grid-cols-4 overflow-y-auto h-24 text-xs scrollbar-thin">
-          {k.map((i) => (
-            <button
-              key={i}
-              onClick={() => setCurEntry(k.indexOf(i))}
-              className={`hover:underline underline-offset-4 capitalize p-4 ${
-                curEntry === k.indexOf(i) ? "text-blue-400" : ""
-              }`}
-            >
-              {i}
-            </button>
-          ))}
+      <div className="grid xs:grid-cols-1 md:grid-cols-2 xs:text-xs md:text-md w-full h-full gap-2 xs:divide-y md:divide-y-0">
+        <div className="flex flex-col gap-1 px-2 xs:h-44 md:h-72 ">
+          <div className="underline underline-offset-4 text-xs">Game</div>
+          <div className="grid xs:grid-cols-2 md:grid-cols-3 overflow-y-auto scrollbar-none">
+            {k.map((i) => (
+              <button
+                key={i}
+                onClick={() => setCurEntry(k.indexOf(i))}
+                className={`border hover:underline underline-offset-4 capitalize p-4 ${
+                  curEntry === k.indexOf(i) ? "text-blue-400" : ""
+                }`}
+              >
+                {i}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="gap- flex flex-col">
-          <div className="flex gap-2 text-md capitalize">
+        <div className="gap-1 flex flex-col p-2 xs:h-44 md:h-72">
+          <div className="flex text-center gap-2 text-md capitalize">
             <div className="underline underline-offset-4">Flavor Text</div>
-            {" - "}
+            <div>{" - "} </div>
             <div>
               {"Pokemon "}
               {k[curEntry]}
             </div>
           </div>
-          <div className="p-4 border-2 h-44">{entries[k[curEntry]]}</div>
+          <div className="p-4 border-2 h-full">{entries[k[curEntry]]}</div>
         </div>
       </div>
     );
   }
   function PokemonInfo() {
     return (
-      <div className="grid grid-cols-2 grid-rows-2 h-fit">
-        <div className="border-2 p-2 w-full h-full">
-          <PokemonGeneralInfo />
+      <div>
+        <div className="grid xs:grid-cols-2 md:grid-cols-2">
+          <div className="border p-2 w-full h-full">
+            <PokemonGeneralInfo />
+          </div>
+          <div className="border p-2 w-full h-full">
+            <PokemonFlavorText />
+          </div>
         </div>
-        <div className="flex flex-col w-full p-2">
-          <PokemonFlavorText />
-        </div>
-        <div className="border-2 p-2 w-full h-full">
-          <PokemonVarieties />
-        </div>
-        <div className=" p-2 mx-auto w-full flex justify-center bg-white">
-          {/* add a toggle and a bar representation */}
-          <RadarChart data={curPokemon.stats} />
+        <div className="grid xs:grid-cols-1 md:grid-cols-2">
+          <div className="border-2 p-2 w-full h-full">
+            <PokemonVarieties />
+          </div>
+          <div className="flex bg-white">
+            {/* add a toggle and a bar representation */}
+            <div className=" bg-white mx-auto">
+              <RadarChart data={curPokemon.stats} />
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col resize-none">
-      <div className="grid grid-cols-12">
+    <div className="flex flex-col xs:p-10 md:px-16">
+      <div className="grid">
         {Object.keys(curPokemon).length > 0 && (
-          <div className="col-span-11">
-            <div className="flex flex-col h-screen p-1">
-              <PokemonView />
-              {view === 1 && <PokemonInfo />}
-              {view === 2 && <PokemonChainView extraData={extraData} />}
-            </div>
-          </div>
-        )}
-        {Object.keys(curPokemon).length > 0 && (
-          <div className="flex flex-col col-span-1 border-l border-r h-full pt-20 gap-4">
-            <button
-              value={1}
-              className="border-2 p-2 mx-2"
-              onClick={(e) => {
-                setView(Number(e.currentTarget.value));
-              }}
-            >
-              Info
-            </button>
-            <button
-              value={2}
-              className="border-2 p-2 mx-2"
-              onClick={(e) => {
-                setView(Number(e.currentTarget.value));
-              }}
-            >
-              Evo
-            </button>
+          <div className="flex flex-col w-full ">
+            <PokemonView />
+            {view === 1 && <PokemonInfo />}
+            {view === 2 && <PokemonChainView extraData={extraData} />}
           </div>
         )}
       </div>

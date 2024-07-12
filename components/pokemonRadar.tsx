@@ -59,9 +59,5 @@ export function RadarChart({ data }: RadarChartProps) {
       },
     },
   };
-  return (
-    <div className=" h-fit w-fit p-2">
-      <Radar data={chartData} options={options} />
-    </div>
-  );
+  return <Radar data={chartData} options={options} />;
 }

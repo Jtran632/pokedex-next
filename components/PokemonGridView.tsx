@@ -9,7 +9,7 @@ export default function PokemonGridView() {
     {}
   );
   const PokemonContextData = useContext(PokemonContext);
-  const { curGen, setCurGen, curPokemon, setCurPokemon } = PokemonContextData;
+  const { curGen, setCurGen, setCurPokemon, setOnGrid } = PokemonContextData;
   useEffect(() => {
     async function fetchAll() {
       async function getPokemonUrls() {
@@ -113,10 +113,10 @@ export default function PokemonGridView() {
   }
   function PokemonGrid() {
     return (
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-10 ">
         <GenSelect />
         <CreatePages />
-        <div className="grid grid-cols-6 resize-none p-2">
+        <div className="grid xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-6 pb-4 xs:px-10 md:px-64">
           {pokeData.length > 0 && Array.isArray(pokeData[curPage]) ? (
             pokeData[curPage].map((pokemon: any, i: number) => (
               <div className="capitalize border w-full  text-xs" key={i}>
@@ -124,11 +124,15 @@ export default function PokemonGridView() {
                   <div>#{pokemon.id}</div>
                   <div>{pokemonNames[pokemon.id]}</div>
                 </div>
-                <img
-                  src={pokemon.sprites.other['official-artwork'].front_default}
-                  className="h-24 mx-auto scale-90 hover:scale-105 hover:animate-pulse "
-                  onClick={() => setCurPokemon(pokemon)}
-                ></img>
+                <div className="flex justify-center px-1 w-full">
+                  <img
+                    src={
+                      pokemon.sprites.other["official-artwork"].front_default
+                    }
+                    className=" w-28 scale-90 hover:scale-105 hover:animate-pulse "
+                    onClick={() => [setCurPokemon(pokemon), setOnGrid(false)]}
+                  ></img>
+                </div>
               </div>
             ))
           ) : (
