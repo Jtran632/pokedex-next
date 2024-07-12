@@ -212,7 +212,7 @@ export default function PokemonInfoView() {
     );
   }
   function PokemonButtons() {
-    let s = `p-1 border-2 border-black rounded-md bg-white w-[1.5rem] h-[1.5rem]`;
+    let s = `p-1 border-2 border-black rounded-md bg-white w-6 h-6`;
     return (
       <div className="flex flex-col text-xs gap-1 justify-end pb-2 w-fit h-fit">
         <button className={s} onClick={() => setPlayCry(true)}>
@@ -223,7 +223,7 @@ export default function PokemonInfoView() {
             volume={0.1}
           />
           <GiSpeaker
-            className={`w-fit fill-black ${playCry ? "fill-blue-600" : ""}`}
+            className={` fill-black ${playCry ? "fill-blue-600" : ""}`}
           />
         </button>
 
@@ -233,7 +233,7 @@ export default function PokemonInfoView() {
             className={s}
           >
             <HiMiniSparkles
-              className={`w-fit ${!shiny ? " fill-black" : "fill-yellow-500"}`}
+              className={` ${!shiny ? " fill-black" : "fill-yellow-500"}`}
             />
           </button>
         )}
@@ -243,9 +243,9 @@ export default function PokemonInfoView() {
             className={s}
           >
             {!flipPokemon ? (
-              <BiRightArrow className="w-fit fill-black" />
+              <BiRightArrow className=" fill-black" />
             ) : (
-              <BiLeftArrow className="w-fit fill-black" />
+              <BiLeftArrow className=" fill-black" />
             )}
           </button>
         )}
@@ -255,9 +255,9 @@ export default function PokemonInfoView() {
             className={s}
           >
             {!isFemale ? (
-              <IoMale className={" w-fit fill-sky-600"} />
+              <IoMale className={" fill-sky-600"} />
             ) : (
-              <IoFemale className={"w-fit  fill-red-500"} />
+              <IoFemale className={" fill-red-500"} />
             )}
           </button>
         )}
