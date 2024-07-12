@@ -438,7 +438,7 @@ export default function PokemonInfoView() {
   }
 
   return (
-    <div className="flex flex-col xs:p-10 md:px-16">
+    <div className="flex flex-col xs:p-10 md:px-16 ">
       <div className="grid">
         {Object.keys(curPokemon).length > 0 && (
           <div className="flex flex-col w-full ">

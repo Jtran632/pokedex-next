@@ -116,7 +116,7 @@ export default function PokemonGridView() {
       <div className="flex flex-col gap-10 ">
         <GenSelect />
         <CreatePages />
-        <div className="grid xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-6 pb-4 xs:px-10 md:px-64">
+        <div className="grid xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-6 pb-4 xs:px-10 md:px-24">
           {pokeData.length > 0 && Array.isArray(pokeData[curPage]) ? (
             pokeData[curPage].map((pokemon: any, i: number) => (
               <div className="capitalize border w-full  text-xs" key={i}>

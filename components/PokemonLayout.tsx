@@ -14,7 +14,7 @@ export default function PokemonLayout() {
     return onGrid ? <PokemonGridView /> : <PokemonInfoView />;
   }
   return (
-    <div className="flex flex-col h-screen divide-y-2 w-screen">
+    <div className="flex flex-col h-screen divide-y-2 w-screen overflow--x-hidden overflow-x-scroll-hidden">
       {Object.keys(curPokemon).length > 0 && (
         <div className="flex justify-end gap-2 text-xs px-4 py-1">
           <button className="border p-1" onClick={() => setOnGrid(true)}>
