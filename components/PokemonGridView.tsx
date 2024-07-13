@@ -84,7 +84,7 @@ export default function PokemonGridView() {
     ];
     const [toggle, setToggle] = useState(false);
     return (
-      <div className=" w-28 h-12 absolute right-10 pt-8 ">
+      <div className=" w-24 h-12 absolute right-10 pt-8 ">
         <div
           className="hover:text-blue-400 text-sm text-center border rounded-md hover:cursor-pointer"
           onClick={() => setToggle(!toggle)}
