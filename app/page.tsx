@@ -2,7 +2,7 @@
 import PokemonLayout from "@/components/PokemonLayout";
 export default async function Home() {
   return (
-    <main className="h-fit p-0 font-pokemonEmerald">
+    <main className="overscroll-contain h-fit w-screen  p-0 font-pokemonEmerald">
       <PokemonLayout />
     </main>
   );

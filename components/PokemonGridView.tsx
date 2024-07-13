@@ -84,9 +84,9 @@ export default function PokemonGridView() {
     ];
     const [toggle, setToggle] = useState(false);
     return (
-      <div className=" w-20 h-12 absolute right-10 pt-8">
+      <div className=" w-20 h-12 absolute right-10 pt-8 ">
         <div
-          className="hover:text-blue-400 text-base text-center border rounded-md p-0 w-full hover:cursor-pointer"
+          className="hover:text-blue-400 text-sm text-center border rounded-md hover:cursor-pointer"
           onClick={() => setToggle(!toggle)}
         >
           <div>{regions[curGen - 1]}</div>
@@ -116,7 +116,7 @@ export default function PokemonGridView() {
       <div className="flex flex-col gap-10 ">
         <GenSelect />
         <CreatePages />
-        <div className="grid xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-6 pb-4 xs:px-10 md:px-24">
+        <div className="grid xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-6 pb-6 xs:px-10 md:px-24">
           {pokeData.length > 0 && Array.isArray(pokeData[curPage]) ? (
             pokeData[curPage].map((pokemon: any, i: number) => (
               <div className="capitalize border w-full  text-xs" key={i}>

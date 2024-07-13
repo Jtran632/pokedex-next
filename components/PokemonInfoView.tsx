@@ -266,9 +266,9 @@ export default function PokemonInfoView() {
   }
   function PokemonView() {
     return (
-      <div className="grid grid-cols-3 bg_pokemon w-full capitalize border-2 border-b-0">
+      <div className="grid grid-cols-7 bg_pokemon w-full capitalize border-2 border-b-0">
         {Object.keys(curPokemon).length > 0 && (
-          <div className="flex justify-start p-4">
+          <div className="flex justify-start p-4 col-span-1">
             <div className="flex flex-col gap-1 text-black text-xs">
               <button
                 value={1}
@@ -291,7 +291,7 @@ export default function PokemonInfoView() {
             </div>
           </div>
         )}
-        <div className="flex justify-center text-black">
+        <div className="flex justify-center text-black col-span-5">
           <div className="flex flex-col justify-center items-center">
             <div className="text-xl">{curPokemon.name}</div>
             <div className="flex gap-1">
@@ -324,11 +324,11 @@ export default function PokemonInfoView() {
                   ? curPokemon?.sprites?.front_shiny_female
                   : curPokemon?.sprites?.back_shiny_female
               }
-              className="h-32"
+              className="h-44"
             ></img>
           </div>
         </div>
-        <div className="flex justify-end p-4">
+        <div className="flex justify-end p-4 col-span-1">
           <div className="flex flex-col  items-center">
             <PokemonButtons />
           </div>

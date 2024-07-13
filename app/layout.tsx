@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${pokemonEmeraldFont.variable} min-w-[1400px] select-none scrollbar-none`}
+      className={`${pokemonEmeraldFont.variable} select-none scrollbar-none`}
     >
       <body className={inter.className}>
         <PokemonProvider>{children}</PokemonProvider>
