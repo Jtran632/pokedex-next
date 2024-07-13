@@ -383,7 +383,7 @@ export default function PokemonInfoView() {
       <div className="grid xs:grid-cols-1 md:grid-cols-2 xs:text-xs md:text-md w-full h-full gap-2 xs:divide-y md:divide-y-0">
         <div className="flex flex-col gap-1 px-2 xs:h-44 md:h-72 ">
           <div className="underline underline-offset-4 text-xs">Game</div>
-          <div className="grid xs:grid-cols-2 md:grid-cols-3 overflow-y-auto scrollbar-none">
+          <div className="grid xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2  lg:grid-cols-3 overflow-y-auto scrollbar-none">
             {k.map((i) => (
               <button
                 key={i}
@@ -398,15 +398,15 @@ export default function PokemonInfoView() {
           </div>
         </div>
         <div className="gap-1 flex flex-col p-2 xs:h-44 md:h-72">
-          <div className="flex text-center gap-2 text-md capitalize">
-            <div className="underline underline-offset-4">Flavor Text</div>
-            <div>{" - "} </div>
-            <div>
+          <div className="flex text-center text-md capitalize">
+            <div className="underline underline-offset-4 text-xs">
               {"Pokemon "}
               {k[curEntry]}
             </div>
           </div>
-          <div className="p-4 border-2 h-full">{entries[k[curEntry]]}</div>
+          <div className="p-4 border-2 h-64 overflow-y-auto scrollbar-none">
+            {entries[k[curEntry]]}
+          </div>
         </div>
       </div>
     );
